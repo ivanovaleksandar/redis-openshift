@@ -96,7 +96,6 @@ items:
         from:
           kind: ImageStreamTag
           name: redis:latest
-          namespace: redis
       type: ImageChange
   status: {}
 - apiVersion: v1
