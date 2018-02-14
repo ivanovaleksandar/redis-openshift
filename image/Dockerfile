@@ -12,11 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM rhel7
+#FROM rhel7
+FROM registry.access.redhat.com/rhscl/redis-32-rhel7
 
-RUN yum install epel-release -y
+RUN rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 
-RUN yum install redis hostname -y ; yum clean all
+#RUN yum install redis hostname -y ; yum clean all
+RUN yum install hostname -y ; yum clean all
 
 COPY redis-master.conf /redis-master/redis.conf
 COPY redis-slave.conf /redis-slave/redis.conf
