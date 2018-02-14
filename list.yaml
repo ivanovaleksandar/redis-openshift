@@ -27,7 +27,6 @@ items:
         from:
           kind: ImageStreamTag
           name: rhel7:latest
-          namespace: openshift
       type: Docker
     triggers: []
   status:
@@ -176,7 +175,6 @@ items:
         from:
           kind: ImageStreamTag
           name: redis:latest
-          namespace: redis
       type: ImageChange
     - imageChangeParams:
         automatic: true
@@ -185,7 +183,6 @@ items:
         from:
           kind: ImageStreamTag
           name: redis:latest
-          namespace: redis
       type: ImageChange
     - type: ConfigChange
   status: {}
@@ -251,7 +248,6 @@ items:
         from:
           kind: ImageStreamTag
           name: redis:latest
-          namespace: redis
       type: ImageChange
   status: {}
 - apiVersion: v1
