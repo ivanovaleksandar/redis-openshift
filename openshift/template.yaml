@@ -26,486 +26,553 @@ parameters:
     value: master
     required: false
 objects:
+  # - apiVersion: v1
+  #   items:
+  #   - apiVersion: v1
+  #     kind: BuildConfig
+  #     metadata:
+  #       creationTimestamp: null
+  #       labels:
+  #         app: redis-build
+  #         name: redis
+  #       name: redis-build
+  #     spec:
+  #       nodeSelector: null
+  #       output:
+  #         to:
+  #           kind: ImageStreamTag
+  #           name: redis:latest
+  #       postCommit: {}
+  #       resources: {}
+  #       runPolicy: Serial
+  #       source:
+  #         contextDir: image
+  #         git:
+  #           uri: https://github.com/ivanovaleksandar/redis-openshift.git
+  #         type: Git
+  #       strategy:
+  #         dockerStrategy:
+  #           from:
+  #             kind: ImageStreamTag
+  #             name: rhel7:latest
+  #         type: Docker
+  #       triggers: []
+  #     status:
+  #       lastVersion: 0
+  #   - apiVersion: v1
+  #     kind: ImageStream
+  #     metadata:
+  #       labels:
+  #         build: redis
+  #       name: redis
+  #     status:
+  #       dockerImageRepository: ""
+  #   - apiVersion: v1
+  #     kind: DeploymentConfig
+  #     metadata:
+  #       creationTimestamp: null
+  #       generation: 1
+  #       labels:
+  #         app: redis
+  #       name: redis
+  #     spec:
+  #       replicas: 3
+  #       selector:
+  #         app: redis
+  #       strategy:
+  #         resources: {}
+  #         rollingParams:
+  #           intervalSeconds: 1
+  #           maxSurge: 25%
+  #           maxUnavailable: 25%
+  #           timeoutSeconds: 600
+  #           updatePeriodSeconds: 1
+  #         type: Rolling
+  #       template:
+  #         metadata:
+  #           creationTimestamp: null
+  #           labels:
+  #             app: redis
+  #         spec:
+  #           containers:
+  #           - image: ' '
+  #             imagePullPolicy: Always
+  #             name: redis
+  #             ports:
+  #             - containerPort: 6379
+  #               protocol: TCP
+  #             resources: {}
+  #             terminationMessagePath: /dev/termination-log
+  #             volumeMounts:
+  #             - mountPath: /redis-master-data
+  #               name: data
+  #           dnsPolicy: ClusterFirst
+  #           restartPolicy: Always
+  #           securityContext: {}
+  #           terminationGracePeriodSeconds: 30
+  #           volumes:
+  #           - emptyDir: {}
+  #             name: data
+  #       test: false
+  #       triggers:
+  #       - type: ConfigChange
+  #       - imageChangeParams:
+  #           automatic: true
+  #           containerNames:
+  #           - redis
+  #           from:
+  #             kind: ImageStreamTag
+  #             name: redis:latest
+  #         type: ImageChange
+  #     status: {}
+  #   - apiVersion: v1
+  #     kind: DeploymentConfig
+  #     metadata:
+  #       creationTimestamp: null
+  #       generation: 1
+  #       labels:
+  #         app: redis-master
+  #         redis-master: "true"
+  #         redis-sentinel: "true"
+  #         role: master
+  #       name: redis-master
+  #     spec:
+  #       replicas: 1
+  #       selector:
+  #         app: redis-master
+  #         redis-master: "true"
+  #         redis-sentinel: "true"
+  #         role: master
+  #       strategy:
+  #         resources: {}
+  #         rollingParams:
+  #           intervalSeconds: 1
+  #           maxSurge: 25%
+  #           maxUnavailable: 25%
+  #           timeoutSeconds: 600
+  #           updatePeriodSeconds: 1
+  #         type: Rolling
+  #       template:
+  #         metadata:
+  #           creationTimestamp: null
+  #           labels:
+  #             app: redis-master
+  #             redis-master: "true"
+  #             redis-sentinel: "true"
+  #             role: master
+  #         spec:
+  #           containers:
+  #           - env:
+  #             - name: MASTER
+  #               value: "true"
+  #             image: ' '
+  #             imagePullPolicy: Always
+  #             name: redis
+  #             ports:
+  #             - containerPort: 6379
+  #               protocol: TCP
+  #             resources: {}
+  #             terminationMessagePath: /dev/termination-log
+  #             volumeMounts:
+  #             - mountPath: /redis-master-data
+  #               name: data
+  #           - env:
+  #             - name: SENTINEL
+  #               value: "true"
+  #             image: ' '
+  #             imagePullPolicy: Always
+  #             name: sentinel
+  #             ports:
+  #             - containerPort: 26379
+  #               protocol: TCP
+  #             resources: {}
+  #             terminationMessagePath: /dev/termination-log
+  #           dnsPolicy: ClusterFirst
+  #           restartPolicy: Always
+  #           securityContext: {}
+  #           terminationGracePeriodSeconds: 30
+  #           volumes:
+  #           - emptyDir: {}
+  #             name: data
+  #       test: false
+  #       triggers:
+  #       - imageChangeParams:
+  #           automatic: true
+  #           containerNames:
+  #           - redis
+  #           from:
+  #             kind: ImageStreamTag
+  #             name: redis:latest
+  #         type: ImageChange
+  #       - imageChangeParams:
+  #           automatic: true
+  #           containerNames:
+  #           - sentinel
+  #           from:
+  #             kind: ImageStreamTag
+  #             name: redis:latest
+  #         type: ImageChange
+  #       - type: ConfigChange
+  #     status: {}
+  #   - apiVersion: v1
+  #     kind: DeploymentConfig
+  #     metadata:
+  #       creationTimestamp: null
+  #       generation: 1
+  #       labels:
+  #         app: redis-sentinel
+  #         redis-sentinel: "true"
+  #       name: redis-sentinel
+  #     spec:
+  #       replicas: 3
+  #       selector:
+  #         app: redis-sentinel
+  #         redis-sentinel: "true"
+  #       strategy:
+  #         resources: {}
+  #         rollingParams:
+  #           intervalSeconds: 1
+  #           maxSurge: 25%
+  #           maxUnavailable: 25%
+  #           timeoutSeconds: 600
+  #           updatePeriodSeconds: 1
+  #         type: Rolling
+  #       template:
+  #         metadata:
+  #           creationTimestamp: null
+  #           labels:
+  #             app: redis-sentinel
+  #             redis-sentinel: "true"
+  #         spec:
+  #           containers:
+  #           - env:
+  #             - name: SENTINEL
+  #               value: "true"
+  #             image: ' '
+  #             imagePullPolicy: Always
+  #             name: sentinel
+  #             ports:
+  #             - containerPort: 26379
+  #               protocol: TCP
+  #             resources: {}
+  #             terminationMessagePath: /dev/termination-log
+  #             volumeMounts:
+  #             - mountPath: /redis-master-data
+  #               name: data
+  #           dnsPolicy: ClusterFirst
+  #           restartPolicy: Always
+  #           securityContext: {}
+  #           terminationGracePeriodSeconds: 30
+  #           volumes:
+  #           - emptyDir: {}
+  #             name: data
+  #       test: false
+  #       triggers:
+  #       - type: ConfigChange
+  #       - imageChangeParams:
+  #           automatic: true
+  #           containerNames:
+  #           - sentinel
+  #           from:
+  #             kind: ImageStreamTag
+  #             name: redis:latest
+  #         type: ImageChange
+  #     status: {}
+  #   - apiVersion: v1
+  #     kind: Service
+  #     metadata:
+  #       creationTimestamp: null
+  #       labels:
+  #         name: master
+  #         role: service
+  #       name: redis-master
+  #     spec:
+  #       ports:
+  #       - port: 6379
+  #         protocol: TCP
+  #         targetPort: 6379
+  #       selector:
+  #         redis-master: "true"
+  #       sessionAffinity: None
+  #       type: ClusterIP
+  #     status:
+  #       loadBalancer: {}
+  #   - apiVersion: v1
+  #     kind: Service
+  #     metadata:
+  #       creationTimestamp: null
+  #       labels:
+  #         name: sentinel
+  #         role: service
+  #       name: redis-sentinel
+  #     spec:
+  #       ports:
+  #       - port: 26379
+  #         protocol: TCP
+  #         targetPort: 26379
+  #       selector:
+  #         redis-sentinel: "true"
+  #       sessionAffinity: None
+  #       type: ClusterIP
+  #     status:
+  #       loadBalancer: {}
+  #   kind: List
+  #   metadata: {}
+
+
+
   - apiVersion: v1
-    items:
-    - apiVersion: v1
-      kind: BuildConfig
-      metadata:
-        creationTimestamp: null
-        labels:
-          app: redis-build
-          name: redis
-        name: redis-build
-      spec:
-        nodeSelector: null
-        output:
-          to:
+    kind: BuildConfig
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: redis-build
+        name: redis
+      name: redis-build
+    spec:
+      nodeSelector: null
+      output:
+        to:
+          kind: ImageStreamTag
+          name: redis:latest
+      postCommit: {}
+      resources: {}
+      runPolicy: Serial
+      source:
+        contextDir: image
+        git:
+          uri: https://github.com/ivanovaleksandar/redis-openshift.git
+        type: Git
+      strategy:
+        dockerStrategy:
+          from:
+            kind: ImageStreamTag
+            name: rhel7:latest
+            namespace: openshift
+        type: Docker
+      triggers: []
+    status:
+      lastVersion: 0
+
+  - apiVersion: v1
+    kind: ImageStream
+    metadata:
+      generation: 2
+      labels:
+        app: rhel7-base
+        name: rhel7-base
+      name: rhel7
+    spec:
+      dockerImageRepository: registry.access.redhat.com/rhel7
+  - apiVersion: v1
+    kind: ImageStream
+    metadata:
+      creationTimestamp: null
+      generation: 1
+      labels:
+        app: redis
+        name: redis
+      name: redis
+    spec: {}    
+
+  - apiVersion: v1
+    kind: DeploymentConfig
+    metadata:
+      labels:
+        app: redis
+      name: redis
+    spec:
+      replicas: 3
+      selector:
+        app: redis
+      template:
+        metadata:
+          labels:
+            app: redis
+        spec:
+          containers:
+          - image: docker-registry.default.svc:5000/redis-example/redis:latest
+            imagePullPolicy: Always
+            name: redis 
+            volumeMounts:
+              - mountPath: /redis-master-data
+                name: data 
+            ports:
+              - containerPort: 6379
+            resources: {}
+          dnsPolicy: ClusterFirst
+          restartPolicy: Always
+          securityContext: {}
+          terminationGracePeriodSeconds: 30
+          volumes:
+            - name: data
+              emptyDir: {}
+      test: false
+      triggers:
+      - type: ConfigChange
+      - imageChangeParams:
+          automatic: true
+          containerNames:
+          - redis
+          from:
             kind: ImageStreamTag
             name: redis:latest
-        postCommit: {}
+            namespace: redis
+        type: ImageChange
+    status: {}
+
+  - apiVersion: v1
+    kind: DeploymentConfig
+    metadata:
+      labels:
+        app: redis-master
+        redis-sentinel: "true"
+        redis-master: "true"
+        role: master
+      name: redis-master
+    spec:
+      replicas: 1
+      selector:
+        app: redis-master
+        redis-sentinel: "true"
+        redis-master: "true"
+        role: master
+      strategy:
         resources: {}
-        runPolicy: Serial
-        source:
-          contextDir: image
-          git:
-            uri: https://github.com/ivanovaleksandar/redis-openshift.git
-          type: Git
-        strategy:
-          dockerStrategy:
-            from:
-              kind: ImageStreamTag
-              name: rhel7:latest
-          type: Docker
-        triggers: []
-      status:
-        lastVersion: 0
-    - apiVersion: v1
-      kind: ImageStream
-      metadata:
-        labels:
-          build: redis
-        name: redis
-      status:
-        dockerImageRepository: ""
-    - apiVersion: v1
-      kind: DeploymentConfig
-      metadata:
-        creationTimestamp: null
-        generation: 1
-        labels:
-          app: redis
-        name: redis
-      spec:
-        replicas: 3
-        selector:
-          app: redis
-        strategy:
-          resources: {}
-          rollingParams:
-            intervalSeconds: 1
-            maxSurge: 25%
-            maxUnavailable: 25%
-            timeoutSeconds: 600
-            updatePeriodSeconds: 1
-          type: Rolling
-        template:
-          metadata:
-            creationTimestamp: null
-            labels:
-              app: redis
-          spec:
-            containers:
-            - image: ' '
-              imagePullPolicy: Always
-              name: redis
-              ports:
-              - containerPort: 6379
-                protocol: TCP
-              resources: {}
-              terminationMessagePath: /dev/termination-log
-              volumeMounts:
-              - mountPath: /redis-master-data
-                name: data
-            dnsPolicy: ClusterFirst
-            restartPolicy: Always
-            securityContext: {}
-            terminationGracePeriodSeconds: 30
-            volumes:
-            - emptyDir: {}
-              name: data
-        test: false
-        triggers:
-        - type: ConfigChange
-        - imageChangeParams:
-            automatic: true
-            containerNames:
-            - redis
-            from:
-              kind: ImageStreamTag
-              name: redis:latest
-          type: ImageChange
-      status: {}
-    - apiVersion: v1
-      kind: DeploymentConfig
-      metadata:
-        creationTimestamp: null
-        generation: 1
-        labels:
-          app: redis-master
-          redis-master: "true"
-          redis-sentinel: "true"
-          role: master
-        name: redis-master
-      spec:
-        replicas: 1
-        selector:
-          app: redis-master
-          redis-master: "true"
-          redis-sentinel: "true"
-          role: master
-        strategy:
-          resources: {}
-          rollingParams:
-            intervalSeconds: 1
-            maxSurge: 25%
-            maxUnavailable: 25%
-            timeoutSeconds: 600
-            updatePeriodSeconds: 1
-          type: Rolling
-        template:
-          metadata:
-            creationTimestamp: null
-            labels:
-              app: redis-master
-              redis-master: "true"
-              redis-sentinel: "true"
-              role: master
-          spec:
-            containers:
-            - env:
+        rollingParams:
+          intervalSeconds: 1
+          maxSurge: 25%
+          maxUnavailable: 25%
+          timeoutSeconds: 600
+          updatePeriodSeconds: 1
+        type: Rolling
+      template:
+        metadata:
+          labels:
+            app: redis-master
+            redis-sentinel: "true"
+            redis-master: "true"
+            role: master
+        spec:
+          containers:
+          - image: docker-registry.default.svc:5000/redis-example/redis:latest
+            imagePullPolicy: Always
+            name: redis
+            env:
               - name: MASTER
-                value: "true"
-              image: ' '
-              imagePullPolicy: Always
-              name: redis
-              ports:
+                value: "true"  
+            volumeMounts:
+              - mountPath: /redis-master-data
+                name: data 
+            ports:
               - containerPort: 6379
-                protocol: TCP
-              resources: {}
-              terminationMessagePath: /dev/termination-log
-              volumeMounts:
-              - mountPath: /redis-master-data
-                name: data
-            - env:
-              - name: SENTINEL
-                value: "true"
-              image: ' '
-              imagePullPolicy: Always
-              name: sentinel
-              ports:
+            resources: {}
+          - image: docker-registry.default.svc:5000/redis-example/redis:latest
+            imagePullPolicy: Always
+            name: sentinel
+            resources: {}
+            ports:
               - containerPort: 26379
-                protocol: TCP
-              resources: {}
-              terminationMessagePath: /dev/termination-log
-            dnsPolicy: ClusterFirst
-            restartPolicy: Always
-            securityContext: {}
-            terminationGracePeriodSeconds: 30
-            volumes:
-            - emptyDir: {}
-              name: data
-        test: false
-        triggers:
-        - imageChangeParams:
-            automatic: true
-            containerNames:
-            - redis
-            from:
-              kind: ImageStreamTag
-              name: redis:latest
-          type: ImageChange
-        - imageChangeParams:
-            automatic: true
-            containerNames:
-            - sentinel
-            from:
-              kind: ImageStreamTag
-              name: redis:latest
-          type: ImageChange
-        - type: ConfigChange
-      status: {}
-    - apiVersion: v1
-      kind: DeploymentConfig
-      metadata:
-        creationTimestamp: null
-        generation: 1
-        labels:
-          app: redis-sentinel
-          redis-sentinel: "true"
-        name: redis-sentinel
-      spec:
-        replicas: 3
-        selector:
-          app: redis-sentinel
-          redis-sentinel: "true"
-        strategy:
-          resources: {}
-          rollingParams:
-            intervalSeconds: 1
-            maxSurge: 25%
-            maxUnavailable: 25%
-            timeoutSeconds: 600
-            updatePeriodSeconds: 1
-          type: Rolling
-        template:
-          metadata:
-            creationTimestamp: null
-            labels:
-              app: redis-sentinel
-              redis-sentinel: "true"
-          spec:
-            containers:
-            - env:
+            env:
               - name: SENTINEL
-                value: "true"
-              image: ' '
-              imagePullPolicy: Always
-              name: sentinel
-              ports:
-              - containerPort: 26379
-                protocol: TCP
-              resources: {}
-              terminationMessagePath: /dev/termination-log
-              volumeMounts:
-              - mountPath: /redis-master-data
-                name: data
-            dnsPolicy: ClusterFirst
-            restartPolicy: Always
-            securityContext: {}
-            terminationGracePeriodSeconds: 30
-            volumes:
-            - emptyDir: {}
-              name: data
-        test: false
-        triggers:
-        - type: ConfigChange
-        - imageChangeParams:
-            automatic: true
-            containerNames:
-            - sentinel
-            from:
-              kind: ImageStreamTag
-              name: redis:latest
-          type: ImageChange
-      status: {}
-    - apiVersion: v1
-      kind: Service
-      metadata:
-        creationTimestamp: null
-        labels:
-          name: master
-          role: service
-        name: redis-master
-      spec:
-        ports:
+                value: "true"   
+          dnsPolicy: ClusterFirst
+          restartPolicy: Always
+          securityContext: {}
+          terminationGracePeriodSeconds: 30
+          volumes:
+            - name: data
+              emptyDir: {}
+      test: false
+      triggers:
+      - type: ConfigChange
+      - imageChangeParams:
+          automatic: true
+          containerNames:
+          - redis
+          from:
+            kind: ImageStreamTag
+            name: redis:latest
+            namespace: redis
+        type: ImageChange
+    status: {}
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      labels:
+        name: master
+        role: service
+      name: redis-master
+    spec:
+      ports:
         - port: 6379
-          protocol: TCP
           targetPort: 6379
-        selector:
-          redis-master: "true"
-        sessionAffinity: None
-        type: ClusterIP
-      status:
-        loadBalancer: {}
-    - apiVersion: v1
-      kind: Service
-      metadata:
-        creationTimestamp: null
-        labels:
-          name: sentinel
-          role: service
-        name: redis-sentinel
-      spec:
-        ports:
+      selector:
+        redis-master: "true"
+
+  - apiVersion: v1
+    kind: DeploymentConfig
+    metadata:
+      labels:
+        app: redis-sentinel
+        redis-sentinel: "true"
+      name: redis-sentinel
+    spec:
+      replicas: 3
+      selector:
+        app: redis-sentinel
+        redis-sentinel: "true"
+      template:
+        metadata:
+          labels:
+            app: redis-sentinel
+            redis-sentinel: "true"
+        spec:
+          containers:
+          - image: docker-registry.default.svc:5000/redis-example/redis:latest
+            imagePullPolicy: Always
+            name: sentinel
+            env:
+              - name: SENTINEL
+                value: "true"
+            volumeMounts:
+              - mountPath: /redis-master-data
+                name: data 
+            ports:
+              - containerPort: 26379
+            resources: {}
+          dnsPolicy: ClusterFirst
+          restartPolicy: Always
+          securityContext: {}
+          terminationGracePeriodSeconds: 30
+          volumes:
+            - name: data
+              emptyDir: {}
+      test: false
+      triggers:
+      - type: ConfigChange
+      - imageChangeParams:
+          automatic: true
+          containerNames:
+          - sentinel
+          from:
+            kind: ImageStreamTag
+            name: redis:latest
+            namespace: redis
+        type: ImageChange
+    status: {}
+
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      labels:
+        name: sentinel
+        role: service
+      name: redis-sentinel
+    spec:
+      ports:
         - port: 26379
-          protocol: TCP
           targetPort: 26379
-        selector:
-          redis-sentinel: "true"
-        sessionAffinity: None
-        type: ClusterIP
-      status:
-        loadBalancer: {}
-    kind: List
-    metadata: {}
+      selector:
+        redis-sentinel: "true"
 
-
-
-  # - apiVersion: v1
-  #   kind: BuildConfig
-  #   metadata:
-  #     creationTimestamp: null
-  #     labels:
-  #       app: redis-build
-  #       name: redis
-  #     name: redis-build
-  #   spec:
-  #     nodeSelector: null
-  #     output:
-  #       to:
-  #         kind: ImageStreamTag
-  #         name: redis:latest
-  #     postCommit: {}
-  #     resources: {}
-  #     runPolicy: Serial
-  #     source:
-  #       contextDir: image
-  #       git:
-  #         uri: https://github.com/ivanovaleksandar/redis-openshift.git
-  #       type: Git
-  #     strategy:
-  #       dockerStrategy:
-  #         from:
-  #           kind: ImageStreamTag
-  #           name: rhel7:latest
-  #           namespace: openshift
-  #       type: Docker
-  #     triggers: []
-  #   status:
-  #     lastVersion: 0
-
-  # - apiVersion: v1
-  #   kind: ImageStream
-  #   metadata:
-  #     generation: 2
-  #     labels:
-  #       app: rhel7-base
-  #       name: rhel7-base
-  #     name: rhel7
-  #   spec:
-  #     dockerImageRepository: registry.access.redhat.com/rhel7
-  # - apiVersion: v1
-  #   kind: ImageStream
-  #   metadata:
-  #     creationTimestamp: null
-  #     generation: 1
-  #     labels:
-  #       app: redis
-  #       name: redis
-  #     name: redis
-  #   spec: {}    
-
-  # - apiVersion: v1
-  #   kind: DeploymentConfig
-  #   metadata:
-  #     labels:
-  #       app: redis
-  #     name: redis
-  #   spec:
-  #     replicas: 3
-  #     selector:
-  #       app: redis
-  #     template:
-  #       metadata:
-  #         labels:
-  #           app: redis
-  #       spec:
-  #         containers:
-  #         - image: docker-registry.default.svc:5000/redis-example/redis:latest
-  #           imagePullPolicy: Always
-  #           name: redis 
-  #           volumeMounts:
-  #             - mountPath: /redis-master-data
-  #               name: data 
-  #           ports:
-  #             - containerPort: 6379
-  #           resources: {}
-  #         dnsPolicy: ClusterFirst
-  #         restartPolicy: Always
-  #         securityContext: {}
-  #         terminationGracePeriodSeconds: 30
-  #         volumes:
-  #           - name: data
-  #             emptyDir: {}
-  #     test: false
-  #     triggers:
-  #     - type: ConfigChange
-  #     - imageChangeParams:
-  #         automatic: true
-  #         containerNames:
-  #         - redis
-  #         from:
-  #           kind: ImageStreamTag
-  #           name: redis:latest
-  #           namespace: redis
-  #       type: ImageChange
-  #   status: {}
-
-  # - apiVersion: v1
-  #   kind: DeploymentConfig
-  #   metadata:
-  #     labels:
-  #       app: redis-master
-  #       redis-sentinel: "true"
-  #       redis-master: "true"
-  #       role: master
-  #     name: redis-master
-  #   spec:
-  #     replicas: 1
-  #     selector:
-  #       app: redis-master
-  #       redis-sentinel: "true"
-  #       redis-master: "true"
-  #       role: master
-  #     strategy:
-  #       resources: {}
-  #       rollingParams:
-  #         intervalSeconds: 1
-  #         maxSurge: 25%
-  #         maxUnavailable: 25%
-  #         timeoutSeconds: 600
-  #         updatePeriodSeconds: 1
-  #       type: Rolling
-  #     template:
-  #       metadata:
-  #         labels:
-  #           app: redis-master
-  #           redis-sentinel: "true"
-  #           redis-master: "true"
-  #           role: master
-  #       spec:
-  #         containers:
-  #         - image: docker-registry.default.svc:5000/redis-example/redis:latest
-  #           imagePullPolicy: Always
-  #           name: redis
-  #           env:
-  #             - name: MASTER
-  #               value: "true"  
-  #           volumeMounts:
-  #             - mountPath: /redis-master-data
-  #               name: data 
-  #           ports:
-  #             - containerPort: 6379
-  #           resources: {}
-  #         - image: docker-registry.default.svc:5000/redis-example/redis:latest
-  #           imagePullPolicy: Always
-  #           name: sentinel
-  #           resources: {}
-  #           ports:
-  #             - containerPort: 26379
-  #           env:
-  #             - name: SENTINEL
-  #               value: "true"   
-  #         dnsPolicy: ClusterFirst
-  #         restartPolicy: Always
-  #         securityContext: {}
-  #         terminationGracePeriodSeconds: 30
-  #         volumes:
-  #           - name: data
-  #             emptyDir: {}
-  #     test: false
-  #     triggers:
-  #     - type: ConfigChange
-  #     - imageChangeParams:
-  #         automatic: true
-  #         containerNames:
-  #         - redis
-  #         from:
-  #           kind: ImageStreamTag
-  #           name: redis:latest
-  #           namespace: redis
-  #       type: ImageChange
-  #   status: {}
-  # - apiVersion: v1
-  #   kind: Service
-  #   metadata:
-  #     labels:
-  #       name: master
-  #       role: service
-  #     name: redis-master
-  #   spec:
-  #     ports:
-  #       - port: 6379
-  #         targetPort: 6379
-  #     selector:
-  #       redis-master: "true"
