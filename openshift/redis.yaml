@@ -16,7 +16,7 @@ items:
           app: redis
       spec:
         containers:
-        - image: 172.30.151.14:5000/redis/redis@sha256:e508f686a4f50eb54350c091f3df8fc6a9649dd8c613482088534c5ca70cfc37
+        - image: docker-registry.default.svc:5000/redis-example/redis:latest
           imagePullPolicy: Always
           name: redis 
           volumeMounts:
