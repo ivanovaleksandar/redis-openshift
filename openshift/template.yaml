@@ -15,6 +15,10 @@ parameters:
     displayName: Name
     required: true
     value: redis
+  - name: NAMESPACE
+    description: The namespace of the application
+    displayName: Name
+    required: true
   - name: SOURCE_REPOSITORY_URL
     description: The URL of the repository with your application source code.
     displayName: Git Repository URL
@@ -391,7 +395,7 @@ objects:
             app: redis
         spec:
           containers:
-          - image: redis:latest
+          - image: docker-registry.default.svc:5000/${NAMESPACE}/redis
             imagePullPolicy: Always
             name: redis 
             volumeMounts:
@@ -444,7 +448,7 @@ objects:
             role: master
         spec:
           containers:
-          - image: redis:latest
+          - image: docker-registry.default.svc:5000/${NAMESPACE}/redis
             imagePullPolicy: Always
             name: redis
             env:
@@ -456,7 +460,7 @@ objects:
             ports:
               - containerPort: 6379
             resources: {}
-          - image: redis:latest
+          - image: docker-registry.default.svc:5000/${NAMESPACE}/redis
             imagePullPolicy: Always
             name: sentinel
             resources: {}
@@ -507,7 +511,7 @@ objects:
             redis-sentinel: "true"
         spec:
           containers:
-          - image: redis:latest
+          - image: docker-registry.default.svc:5000/${NAMESPACE}/redis
             imagePullPolicy: Always
             name: sentinel
             env:
