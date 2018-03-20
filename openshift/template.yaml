@@ -391,7 +391,7 @@ objects:
             app: redis
         spec:
           containers:
-          - image: docker-registry.default.svc:5000/redis-example/redis:latest
+          - image: redis:latest
             imagePullPolicy: Always
             name: redis 
             volumeMounts:
@@ -454,7 +454,7 @@ objects:
             role: master
         spec:
           containers:
-          - image: docker-registry.default.svc:5000/redis-example/redis:latest
+          - image: redis:latest
             imagePullPolicy: Always
             name: redis
             env:
@@ -466,7 +466,7 @@ objects:
             ports:
               - containerPort: 6379
             resources: {}
-          - image: docker-registry.default.svc:5000/redis-example/redis:latest
+          - image: redis:latest
             imagePullPolicy: Always
             name: sentinel
             resources: {}
@@ -527,7 +527,7 @@ objects:
             redis-sentinel: "true"
         spec:
           containers:
-          - image: docker-registry.default.svc:5000/redis-example/redis:latest
+          - image: redis:latest
             imagePullPolicy: Always
             name: sentinel
             env:
