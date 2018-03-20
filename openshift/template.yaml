@@ -348,7 +348,7 @@ objects:
           from:
             kind: ImageStreamTag
             name: rhel7:latest
-            namespace: openshift    namespace: openshift
+            namespace: openshift
         type: Docker
       triggers: []
     status:
