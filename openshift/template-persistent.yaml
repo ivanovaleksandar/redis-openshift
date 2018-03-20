@@ -105,7 +105,7 @@ objects:
             name: redis 
             volumeMounts:
               - mountPath: /redis-master-data
-                name: data 
+                name: redis-data 
             ports:
               - containerPort: 6379
             resources: {}
@@ -114,8 +114,9 @@ objects:
           securityContext: {}
           terminationGracePeriodSeconds: 30
           volumes:
-            - name: data
-              emptyDir: {}
+            - persistentVolumeClaim:
+                claimName: 'redis'
+              name: 'redis-data'
       test: false
       triggers: []
     status: {}
@@ -163,7 +164,7 @@ objects:
                 value: "true"  
             volumeMounts:
               - mountPath: /redis-master-data
-                name: data 
+                name: redis-master-data 
             ports:
               - containerPort: 6379
             resources: {}
@@ -181,8 +182,9 @@ objects:
           securityContext: {}
           terminationGracePeriodSeconds: 30
           volumes:
-            - name: data
-              emptyDir: {}
+            - persistentVolumeClaim:
+                claimName: 'redis-master'
+              name: 'redis-master-data'
       test: false
       triggers: []
     status: {}
@@ -227,7 +229,7 @@ objects:
                 value: "true"
             volumeMounts:
               - mountPath: /redis-master-data
-                name: data 
+                name: redis-sentinel-data
             ports:
               - containerPort: 26379
             resources: {}
@@ -236,8 +238,9 @@ objects:
           securityContext: {}
           terminationGracePeriodSeconds: 30
           volumes:
-            - name: data
-              emptyDir: {}
+            - persistentVolumeClaim:
+                claimName: 'redis-sentinel'
+              name: 'redis-sentinel-data'
       test: false
       triggers: []
     status: {}
