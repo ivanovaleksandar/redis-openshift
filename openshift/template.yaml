@@ -412,7 +412,9 @@ objects:
             - name: data
               emptyDir: {}
       test: false
+      triggers: []
     status: {}
+
 
   - apiVersion: v1
     kind: DeploymentConfig
@@ -477,6 +479,7 @@ objects:
             - name: data
               emptyDir: {}
       test: false
+      triggers: []
     status: {}
   - apiVersion: v1
     kind: Service
@@ -531,6 +534,7 @@ objects:
             - name: data
               emptyDir: {}
       test: false
+      triggers: []
     status: {}
 
   - apiVersion: v1
